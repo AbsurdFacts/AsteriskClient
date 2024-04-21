@@ -15,7 +15,7 @@ end
 
 -- Create the menu GUI
 local screenGui = Instance.new("ScreenGui", script.Parent)
-screenGui.Name = "FeatureMenu"
+screenGui.Name = "AsteriskMenu"
 
 local menuFrame = Instance.new("Frame", screenGui)
 menuFrame.Size = UDim2.new(0.3, 0, 0.5, 0)
@@ -114,31 +114,34 @@ createButton("HostPanel", UDim2.new(0.1, 0, 0.15, 0), HostPanel)
 createButton("ESP", UDim2.new(0.1, 0, 0.20, 0), esp)
 createButton("PlayerLevel50", UDim2.new(0.1, 0, 0.25, 0), PL50)
 
+
 -- Toggle menu visibility
-local function toggleMenu()
-    menuFrame.Visible = not menuFrame.Visible
+local button = Instance.new("TextButton")
+button.Text = "Asterisk Client"
+button.Size = UDim2.new(0.2, 0, 0.1, 0)
+button.Position = UDim2.new(0.4, 0, 0.85, 0)
+button.Parent = screenGui
+
+-- Function to handle button click
+local function toggleFrame()
+	menuFrame.Visible = not menuFrame.Visible -- Toggle visibility of the frame
 end
 
--- Listen for the "L" key to toggle the menu
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed and input.KeyCode == Enum.KeyCode.RightShift then
-        toggleMenu()
-    end
-end)
+-- Connect the toggleFrame function to the button's Click event
+button.MouseButton1Click:Connect(toggleFrame)
 
 -- Check if the local player is a private user and adjust the menu accordingly
 local localPlayer = Players.LocalPlayer
 if isPrivateUser(localPlayer.Name) then
     -- Create buttons for private features
-	createButton("SwordTexture", UDim2.new(0.1, 0, 0.30, 0), function() 
-		workspace.CurrentCamera.Viewmodel.ChildAdded:Connect(function(x)
-			if x and x:FindFirstChild("Handle") then
-				if string.find(x.Name:lower(), 'sword') then
-					x.Handle.Material = "ForceField"
-					x.Handle.MeshId = "rbxassetid://13471207377"
-					x.Handle.BrickColor = BrickColor.new("Hot pink")
-				end
-			end
-		end)
+	createButton("PlayerLevelInfinite", UDim2.new(0.1, 0, 0.30, 0), function()
+		createNotification(screenGui, "Name", "PlayerLevelInfinite Enabled!", 5)
+		game.Players.LocalPlayer:SetAttribute("PlayerLevel", math.huge)
+	end)
+	createButton("KickAll", UDim2.new(0.1, 0, 0.35, 0), function()
+		createNotification(screenGui, "Name", "KickAll Enabled!", 5)
+		for _, player in ipairs(Players:GetPlayers()) do
+			player:Kick("KICKED BY ASTERISK PRIVATE USER! GET KICKED!")
+		end
 	end)
 end
