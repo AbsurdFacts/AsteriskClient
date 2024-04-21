@@ -3,19 +3,19 @@ The all new hacking client for Roblox Bedwars! 👀
 This hacking client has AutoWin, BedTP, PlayerTP, And even **HostPanel** hacks!
 ## All Features
 This hacking client right now has:
-Fly
-Speed
-BedTP
-Bodyguard
-PlayerLevel50
-ESP
-KillAura
-Nuker
-HostPanel
+Fly,
+Speed,
+BedTP,
+Bodyguard,
+PlayerLevel50,
+ESP,
+KillAura,
+Nuker,
+HostPanel,
 ## Asterisk Private Features
-**ImageESP**
-**PlayerLevelInfinite**
-**CrashAll**
+**ImageESP**,
+**PlayerLevelInfinite**,
+**CrashAll**,
 ---------------------------------------------
 # QNA
 ## How To Get Asterisk Private
