@@ -121,7 +121,7 @@ end
 
 -- Listen for the "L" key to toggle the menu
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed and input.KeyCode == Enum.KeyCode.L then
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.RightShift then
         toggleMenu()
     end
 end)
