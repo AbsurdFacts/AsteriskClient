@@ -13,7 +13,6 @@ KillAura,
 Nuker,
 HostPanel,
 ## Asterisk Private Features
-**ImageESP**,
 **PlayerLevelInfinite**,
 **CrashAll**
 ---------------------------------------------
