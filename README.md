@@ -13,7 +13,7 @@ KillAura,
 Nuker,
 HostPanel,
 ## Asterisk Private Features
-**PlayerLevelInfinite**,
+**SwordTexture**,
 **CrashAll**
 ---------------------------------------------
 # QNA
