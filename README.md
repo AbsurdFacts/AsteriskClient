@@ -15,7 +15,7 @@ HostPanel,
 ## Asterisk Private Features
 **ImageESP**,
 **PlayerLevelInfinite**,
-**CrashAll**,
+**CrashAll**
 ---------------------------------------------
 # QNA
 ## How To Get Asterisk Private
