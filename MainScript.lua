@@ -1,4 +1,4 @@
-local FancyButtonCreatorModule = {}
+local API = {}
 
 -- Define private players
 local privatePlayers = {
@@ -7,7 +7,7 @@ local privatePlayers = {
 }
 
 -- Function to create a button
-function FancyButtonCreatorModule.CreateButton(parent, buttonText, position, size, callback)
+function API.CreateButton(parent, buttonText, position, size, callback)
     local button = Instance.new("TextButton")
     button.Parent = parent
     button.Text = buttonText
@@ -41,24 +41,24 @@ local function CreateMainGUI()
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     screenGui.Name = "AsteriskClientGUI"
 
-    local mainButton = FancyButtonCreatorModule.CreateButton(screenGui, "AsteriskClient", UDim2.new(0.5, -50, 0, 100), UDim2.new(0, 100, 0, 50), function()
+    local mainButton = API.CreateButton(screenGui, "AsteriskClient", UDim2.new(0.5, -50, 0, 100), UDim2.new(0, 100, 0, 50), function()
         local frame = Instance.new("Frame")
         frame.Parent = screenGui
         frame.Position = UDim2.new(0.5, -150, 0, 160)
         frame.Size = UDim2.new(0, 300, 0, 300)
 		frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		FancyButtonCreatorModule.CreateButton(frame, "X", UDim2.new(0.5, -200, 0, 160), UDim2.new(0, 50, 0, 50), function()
+		API.CreateButton(frame, "X", UDim2.new(0.5, -200, 0, 160), UDim2.new(0, 50, 0, 50), function()
 			frame.Visible = false
 		end)
 
         -- Regular features
-		FancyButtonCreatorModule.CreateButton(frame, "Speed", UDim2.new(0, 10, 0, 10), UDim2.new(0, 80, 0, 30), function()
+		API.CreateButton(frame, "Speed", UDim2.new(0, 10, 0, 10), UDim2.new(0, 80, 0, 30), function()
 			print("Speed Activated") 
 			local player = game.Players.LocalPlayer
 			local hum = player.Character.Humanoid
 			hum.WalkSpeed = 23
 		end)
-		FancyButtonCreatorModule.CreateButton(frame, "Bodyguard", UDim2.new(0, 10, 0, 50), UDim2.new(0, 80, 0, 30), function()
+		API.CreateButton(frame, "Bodyguard", UDim2.new(0, 10, 0, 50), UDim2.new(0, 80, 0, 30), function()
 			print("Bodyguard Activated") 
 			for i, v in pairs(game:GetService("Players"):GetChildren()) do
 
@@ -71,11 +71,11 @@ local function CreateMainGUI()
 				end
 			end
 		end)
-		FancyButtonCreatorModule.CreateButton(frame, "PlayerLevel50", UDim2.new(0, 10, 0, 90), UDim2.new(0, 80, 0, 30), function()
+		API.CreateButton(frame, "PlayerLevel50", UDim2.new(0, 10, 0, 90), UDim2.new(0, 80, 0, 30), function()
 			print("PlayerLevel50 Activated")
 			game.Players.LocalPlayer:SetAttribute("PlayerLevel", 50)
 		end)
-		FancyButtonCreatorModule.CreateButton(frame, "ESP", UDim2.new(0, 10, 0, 130), UDim2.new(0, 80, 0, 30), function()
+		API.CreateButton(frame, "ESP", UDim2.new(0, 10, 0, 130), UDim2.new(0, 80, 0, 30), function()
 			print("ESP Activated") 
 			local FillColor = Color3.fromRGB(175,25,255)
 			local DepthMode = "AlwaysOnTop"
@@ -127,14 +127,26 @@ local function CreateMainGUI()
 				end
 			end)
 		end)
-		FancyButtonCreatorModule.CreateButton(frame, "HostPanel", UDim2.new(0, 10, 0, 170), UDim2.new(0, 80, 0, 30), function()
+		API.CreateButton(frame, "HostPanel", UDim2.new(0, 10, 0, 170), UDim2.new(0, 80, 0, 30), function()
 			print("HostPanel Activated") 
 			game.Players.LocalPlayer:SetAttribute("CustomMatchRole", "host")
+		end)
+		API.CreateButton(frame, "coolkid skybox", UDim2.new(0, 10, 0, 210), UDim2.new(0, 80, 0, 30), function()
+			print("skybox Activated") 
+			s = Instance.new("Sky")
+			s.Name = "SKY"
+			s.SkyboxBk = "http://www.roblox.com/asset/?id=358313209"
+			s.SkyboxDn = "http://www.roblox.com/asset/?id=358313209"
+			s.SkyboxFt = "http://www.roblox.com/asset/?id=358313209"
+			s.SkyboxLf = "http://www.roblox.com/asset/?id=358313209"
+			s.SkyboxRt = "http://www.roblox.com/asset/?id=358313209"
+			s.SkyboxUp = "http://www.roblox.com/asset/?id=358313209"
+			s.Parent = game.Lighting
 		end)
 
         -- Private features
         if IsPrivatePlayer(game.Players.LocalPlayer.Name) then
-			FancyButtonCreatorModule.CreateButton(frame, "SwordTexture", UDim2.new(0, 100, 0, 10), UDim2.new(0, 80, 0, 30), function()
+			API.CreateButton(frame, "SwordTexture", UDim2.new(0, 100, 0, 10), UDim2.new(0, 80, 0, 30), function()
 				print("SwordTexture Activated") 
 				workspace.CurrentCamera.Viewmodel.ChildAdded:Connect(function(x)
 					if x and x:FindFirstChild("Handle") then
@@ -146,7 +158,7 @@ local function CreateMainGUI()
 					end
 				end)
 			end)
-			FancyButtonCreatorModule.CreateButton(frame, "CrashAll (COMING SOON)", UDim2.new(0, 100, 0, 50), UDim2.new(0, 80, 0, 30), function()
+			API.CreateButton(frame, "CrashAll (COMING SOON)", UDim2.new(0, 100, 0, 50), UDim2.new(0, 80, 0, 30), function()
 				print("CrashAll Activated") 
 			end)
         end
@@ -155,4 +167,4 @@ end
 
 CreateMainGUI()
 
-return FancyButtonCreatorModule
+return API
