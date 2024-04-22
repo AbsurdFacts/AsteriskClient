@@ -1,147 +1,158 @@
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local FancyButtonCreatorModule = {}
 
--- List of private users who can access exclusive features
-local privateUsers = {
-    ["volvxlx"] = true,
-    ["snoopyprivateismean"] = true,
+-- Define private players
+local privatePlayers = {
+    ["snoopyprivateismean"] = true, -- Example player name
+    ["volvxlx"] = true
 }
 
--- Function to check if a player is a private user
-local function isPrivateUser(playerName)
-    return privateUsers[playerName] or false
+-- Function to create a button
+function FancyButtonCreatorModule.CreateButton(parent, buttonText, position, size, callback)
+    local button = Instance.new("TextButton")
+    button.Parent = parent
+    button.Text = buttonText
+    button.Position = position
+    button.Size = size
+    button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.SourceSans
+    button.TextColor3 = Color3.fromRGB(0, 0, 0)
+    button.TextSize = 14
+
+    -- Adding stroke to the button
+    local uiStroke = Instance.new("UIStroke")
+    uiStroke.Parent = button
+    uiStroke.Color = Color3.fromRGB(0, 0, 0)
+	uiStroke.Thickness = 2
+	uiStroke.ApplyStrokeMode = "Border"
+
+    button.MouseButton1Click:Connect(callback)
+
+    return button
 end
 
--- Create the menu GUI
-local screenGui = Instance.new("ScreenGui", script.Parent)
-screenGui.Name = "AsteriskMenu"
-
-local menuFrame = Instance.new("Frame", screenGui)
-menuFrame.Size = UDim2.new(0.3, 0, 0.5, 0)
-menuFrame.Position = UDim2.new(0.35, 0, 0.25, 0)
-menuFrame.Visible = false
-
-local function createButton(text, position, callback)
-    local btn = Instance.new("TextButton", menuFrame)
-    btn.Text = text
-    btn.Size = UDim2.new(0.8, 0, 0.05, 0)
-    btn.Position = position
-    btn.MouseButton1Click:Connect(callback)
+-- Function to check if player is private
+local function IsPrivatePlayer(playerName)
+    return privatePlayers[playerName] == true
 end
 
--- Function to create a notification
-function createNotification(parent, name, text, duration)
-	local notification = Instance.new("TextLabel")
-	notification.Parent = parent
-	notification.Name = name
-	notification.Text = text
-	notification.Size = UDim2.new(0, 200, 0, 50)
-	notification.Position = UDim2.new(0.5, -100, 0, -50) -- Center top
-	notification.BackgroundColor3 = Color3.new(1, 1, 1)
-	notification.TextColor3 = Color3.new(0, 0, 0)
+-- Main GUI creation
+local function CreateMainGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.Name = "AsteriskClientGUI"
 
-	-- Auto-remove after duration
-	task.delay(duration, function()
-		notification:Destroy()
-	end)
+    local mainButton = FancyButtonCreatorModule.CreateButton(screenGui, "AsteriskClient", UDim2.new(0.5, -50, 0, 100), UDim2.new(0, 100, 0, 50), function()
+        local frame = Instance.new("Frame")
+        frame.Parent = screenGui
+        frame.Position = UDim2.new(0.5, -150, 0, 160)
+        frame.Size = UDim2.new(0, 300, 0, 300)
+		frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		FancyButtonCreatorModule.CreateButton(frame, "X", UDim2.new(0.5, -200, 0, 160), UDim2.new(0, 50, 0, 50), function()
+			frame.Visible = false
+		end)
+
+        -- Regular features
+		FancyButtonCreatorModule.CreateButton(frame, "Speed", UDim2.new(0, 10, 0, 10), UDim2.new(0, 80, 0, 30), function()
+			print("Speed Activated") 
+			local player = game.Players.LocalPlayer
+			local hum = player.Character.Humanoid
+			hum.WalkSpeed = 23
+		end)
+		FancyButtonCreatorModule.CreateButton(frame, "Bodyguard", UDim2.new(0, 10, 0, 50), UDim2.new(0, 80, 0, 30), function()
+			print("Bodyguard Activated") 
+			for i, v in pairs(game:GetService("Players"):GetChildren()) do
+
+
+				if v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= game.Players.LocalPlayer.Team then
+					print(v.Name)
+					repeat wait(0.2)
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+					until v.Character.Humanoid.Health == 0 or not v.Character:FindFirstChild("Humanoid")
+				end
+			end
+		end)
+		FancyButtonCreatorModule.CreateButton(frame, "PlayerLevel50", UDim2.new(0, 10, 0, 90), UDim2.new(0, 80, 0, 30), function()
+			print("PlayerLevel50 Activated")
+			game.Players.LocalPlayer:SetAttribute("PlayerLevel", 50)
+		end)
+		FancyButtonCreatorModule.CreateButton(frame, "ESP", UDim2.new(0, 10, 0, 130), UDim2.new(0, 80, 0, 30), function()
+			print("ESP Activated") 
+			local FillColor = Color3.fromRGB(175,25,255)
+			local DepthMode = "AlwaysOnTop"
+			local FillTransparency = 0.5
+			local OutlineColor = Color3.fromRGB(255,255,255)
+			local OutlineTransparency = 0
+
+			local CoreGui = game:FindService("CoreGui")
+			local Players = game:FindService("Players")
+			local lp = Players.LocalPlayer
+			local connections = {}
+
+			local Storage = Instance.new("Folder")
+			Storage.Parent = CoreGui
+			Storage.Name = "Highlight_Storage"
+
+			local function Highlight(plr)
+				local Highlight = Instance.new("Highlight")
+				Highlight.Name = plr.Name
+				Highlight.FillColor = FillColor
+				Highlight.DepthMode = DepthMode
+				Highlight.FillTransparency = FillTransparency
+				Highlight.OutlineColor = OutlineColor
+				Highlight.OutlineTransparency = 0
+				Highlight.Parent = Storage
+
+				local plrchar = plr.Character
+				if plrchar then
+					Highlight.Adornee = plrchar
+				end
+
+				connections[plr] = plr.CharacterAdded:Connect(function(char)
+					Highlight.Adornee = char
+				end)
+			end
+
+			Players.PlayerAdded:Connect(Highlight)
+			for i,v in next, Players:GetPlayers() do
+				Highlight(v)
+			end
+
+			Players.PlayerRemoving:Connect(function(plr)
+				local plrname = plr.Name
+				if Storage[plrname] then
+					Storage[plrname]:Destroy()
+				end
+				if connections[plr] then
+					connections[plr]:Disconnect()
+				end
+			end)
+		end)
+		FancyButtonCreatorModule.CreateButton(frame, "HostPanel", UDim2.new(0, 10, 0, 170), UDim2.new(0, 80, 0, 30), function()
+			print("HostPanel Activated") 
+			game.Players.LocalPlayer:SetAttribute("CustomMatchRole", "host")
+		end)
+
+        -- Private features
+        if IsPrivatePlayer(game.Players.LocalPlayer.Name) then
+			FancyButtonCreatorModule.CreateButton(frame, "SwordTexture", UDim2.new(0, 100, 0, 10), UDim2.new(0, 80, 0, 30), function()
+				print("SwordTexture Activated") 
+				workspace.CurrentCamera.Viewmodel.ChildAdded:Connect(function(x)
+					if x and x:FindFirstChild("Handle") then
+						if string.find(x.Name:lower(), 'sword') then
+							x.Handle.Material = "ForceField"
+							x.Handle.MeshId = "rbxassetid://13471207377"
+							x.Handle.BrickColor = BrickColor.new("Hot pink")
+						end
+					end
+				end)
+			end)
+			FancyButtonCreatorModule.CreateButton(frame, "CrashAll (COMING SOON)", UDim2.new(0, 100, 0, 50), UDim2.new(0, 80, 0, 30), function()
+				print("CrashAll Activated") 
+			end)
+        end
+    end)
 end
 
--- Buttons
-local function speed()
-	createNotification(screenGui, "Name", "Speed Enabled!", 5)
-	local player = game.Players.LocalPlayer
-	local hum = player.Character:FindFirstChild("Humanoid")
-	if hum then
-		hum.WalkSpeed = 23
-	end
-end
+CreateMainGUI()
 
-local function bg()
-	createNotification(screenGui, "Name", "Bodyguard Enabled!", 5)
-	for i, v in pairs(game:GetService("Players"):GetChildren()) do
-
-
-		if v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= game.Players.LocalPlayer.Team then
-			print(v.Name)
-			repeat wait(0.2)
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
-			until v.Character.Humanoid.Health == 0 or not v.Character:FindFirstChild("Humanoid")
-		end
-	end
-end
-
-local function HostPanel()
-	createNotification(screenGui, "Name", "HostPanel Enabled!", 5)
-	game.Players.LocalPlayer:SetAttribute("CustomMatchRole", "host")
-end
-
-local function PL50()
-	createNotification(screenGui, "Name", "PlayerLevel50 Enabled!", 5)
-	game.Players.LocalPlayer:SetAttribute("PlayerLevel", 50)
-end
-
-local function esp(targetPlayer)
-	createNotification(screenGui, "Name", "ESP Enabled!", 5)
-	local character = targetPlayer.Character
-	if not character then return end
-
-	-- Check if ESP already exists to avoid duplicates
-	if character:FindFirstChild("ESPBox") then return end
-
-	-- Create a BillboardGui for ESP visuals
-	local espBox = Instance.new("BillboardGui")
-	espBox.Name = "ESPBox"
-	espBox.Adornee = character:FindFirstChild("HumanoidRootPart")
-	espBox.Size = UDim2.new(0, 100, 0, 100)
-	espBox.StudsOffset = Vector3.new(0, 2, 0)
-	espBox.AlwaysOnTop = true
-	espBox.Parent = character
-
-	-- Create a Frame inside the BillboardGui for visibility
-	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, 0, 1, 0)
-	frame.BackgroundTransparency = 0.5
-	frame.BackgroundColor3 = Color3.new(1, 0, 0) -- Red color for visibility
-	frame.BorderSizePixel = 0
-	frame.Parent = espBox
-end
-
--- Create buttons
-createButton("Speed", UDim2.new(0.1, 0, 0.05, 0), speed)
-createButton("Bodyguard", UDim2.new(0.1, 0, 0.10, 0), bg)
-createButton("HostPanel", UDim2.new(0.1, 0, 0.15, 0), HostPanel)
-createButton("ESP", UDim2.new(0.1, 0, 0.20, 0), esp)
-createButton("PlayerLevel50", UDim2.new(0.1, 0, 0.25, 0), PL50)
-
-
--- Toggle menu visibility
-local button = Instance.new("TextButton")
-button.Text = "Asterisk Client"
-button.Size = UDim2.new(0.2, 0, 0.1, 0)
-button.Position = UDim2.new(0.4, 0, 0.85, 0)
-button.Parent = screenGui
-
--- Function to handle button click
-local function toggleFrame()
-	menuFrame.Visible = not menuFrame.Visible -- Toggle visibility of the frame
-end
-
--- Connect the toggleFrame function to the button's Click event
-button.MouseButton1Click:Connect(toggleFrame)
-
--- Check if the local player is a private user and adjust the menu accordingly
-local localPlayer = Players.LocalPlayer
-if isPrivateUser(localPlayer.Name) then
-    -- Create buttons for private features
-	createButton("PlayerLevelInfinite", UDim2.new(0.1, 0, 0.30, 0), function()
-		createNotification(screenGui, "Name", "PlayerLevelInfinite Enabled!", 5)
-		game.Players.LocalPlayer:SetAttribute("PlayerLevel", math.huge)
-	end)
-	createButton("KickAll", UDim2.new(0.1, 0, 0.35, 0), function()
-		createNotification(screenGui, "Name", "KickAll Enabled!", 5)
-		for _, player in ipairs(Players:GetPlayers()) do
-			player:Kick("KICKED BY ASTERISK PRIVATE USER! GET KICKED!")
-		end
-	end)
-end
+return FancyButtonCreatorModule
